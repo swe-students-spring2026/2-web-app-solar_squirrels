@@ -1,5 +1,6 @@
 from flask import Flask
 from dotenv import load_dotenv
+from flask import jsonify
 import os
 
 load_dotenv()
@@ -22,9 +23,16 @@ def create_app():
     
     # app.register_blueprint(users_bp, url_prefix='/api/users')
     # app.register_blueprint(workouts_bp, url_prefix='/api/workouts')
-    
-    @app.route('/health')
-    def health():
-        return {'status': 'ok'}, 200
+
+
+    @app.get("/health")
+    def health_check():
+        try:
+            from app.extensions import get_db
+            db = get_db()
+            db.command("ping")
+            return jsonify({"status": "connected to mongo"})
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
     
     return app

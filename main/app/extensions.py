@@ -12,7 +12,10 @@ def init_db(app):
     mongo_client = MongoClient(mongo_uri)
     
     # Extract database name from URI or use default
-    db_name = mongo_uri.split('/')[-1].split('?')[0] or 'workout_db'
+    db_name = mongo_uri.split('/')[-1].split('?')[0]
+    if not db_name or db_name.startswith('mongodb'):
+        db_name = 'workout_db'
+    
     db = mongo_client[db_name]
     
     app.teardown_appcontext(close_db)
@@ -20,6 +23,10 @@ def init_db(app):
 
 def get_db():
     if 'db' not in g:
+        if db is None:
+            raise RuntimeError(
+                "Database not initialized. Make sure init_db() is called during app setup."
+            )
         g.db = db
     return g.db
 
