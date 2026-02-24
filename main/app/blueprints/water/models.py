@@ -1,10 +1,11 @@
+from datetime import datetime
+from pydantic import BaseModel
 
-
-import datetime
 
 class WaterItem(BaseModel):
     time: datetime
     amount: int
+
 
 class Water(BaseModel):
     user_id: str
