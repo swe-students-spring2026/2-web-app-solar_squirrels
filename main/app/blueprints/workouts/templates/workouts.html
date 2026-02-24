@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workout List</title>
+  <link rel="stylesheet" href="{{ url_for('workouts.static', filename='style.css') }}">
+</head>
+<body>
+<!-- your comment here -->
+<div class="container">
+
+  <div class="header">
+    <h1>My Workouts</h1>
+    <a class="btn" href="{{ url_for('workouts.add_workout_page') }}">+ Add Workout</a>
+  </div>
+
+  <!-- Search -->
+  <form class="search" method="get" action="{{ url_for('workouts.workout_list_page') }}">
+    <input type="text" name="q" placeholder="Search workouts">
+  </form>
+
+  <!-- If backend sends workouts -->
+  {% if workouts and workouts|length > 0 %}
+    {% for w in workouts %}
+      <a class="card" href="{{ url_for('workouts.workout_detail_page', workout_uuid=w.workout_uuid) }}">
+        <div class="date">{{ w.date }}</div>
+        <div class="line">{{ w.workout.type }} • {{ w.workout.duration }} min</div>
+      </a>
+    {% endfor %}
+
+  {% else %}
+
+  <!-- Demo data for Sprint 1 -->
+  <div class="card">
+    <div class="date">Feb 23, 2026</div>
+    <div class="line">Strength Training • 45 min</div>
+  </div>
+
+  <div class="card">
+    <div class="date">Feb 21, 2026</div>
+    <div class="line">Cardio Run • 30 min</div>
+  </div>
+
+  <div class="card">
+    <div class="date">Feb 19, 2026</div>
+    <div class="line">Upper Body • 50 min</div>
+  </div>
+{% endif %}
+
+</div>
+
+</body>
+</html>
