@@ -11,7 +11,11 @@ class MealItem(BaseModel):
     fat: float
 
 
-class Meal(BaseModel):
-    uuid: str
-    date: datetime
+class MealEntry(BaseModel):
     items: list[MealItem]
+
+
+class Meal(BaseModel):
+    user_id: str
+    date: datetime
+    meals: list[MealEntry] = []
