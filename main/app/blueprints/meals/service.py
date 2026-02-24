@@ -35,4 +35,4 @@ class MealService:
             )
             return Meal(**result)
         except Exception as e:
-            raise Exception("Failed to update meal")
+            raise Exception("Failed to update meal: " + str(e))
