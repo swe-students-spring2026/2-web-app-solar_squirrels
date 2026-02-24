@@ -6,7 +6,7 @@ from datetime import datetime
 class MealService:
     
     @staticmethod
-    def get_user_meals(uuid: str, date: datetime) -> list[Meal]:
+    def get_user_meals(user_id: str, date: datetime) -> list[Meal]:
         db = get_db()
 
         try:
@@ -16,13 +16,13 @@ class MealService:
             raise Exception("Failed to get user meals")
     
     @staticmethod
-    def update_meals(uuid: str, date: datetime, meal: Meal) -> Meal:
+    def update_meals(user_id: str, date: datetime, meal: Meal) -> Meal:
         db = get_db()
 
         try:
             meal_dict = meal.model_dump()
             result = db.meals.update_one(
-                {"uuid": uuid, "date": date},
+                {"user_id": uuid, "date": date},
                 {"$set": meal_dict},
                 upsert=True
             )
