@@ -29,6 +29,27 @@ def create_app():
     for rule in app.url_map.iter_rules():
         print(rule)
     print("-------------------------------")
+
+    @app.route("/")
+    def index():
+        return app.send_static_file("index.html")
+    
+    @app.route("/onboarding")
+    def onboarding():
+        return app.send_static_file("onboarding.html")
+    
+    @app.route("/dashboard")
+    def dashboard():
+        return app.send_static_file("dashboard.html")
+
+    @app.route("/workouts")
+    def workouts():
+        return app.send_static_file("workouts.html")
+    
+    @app.route("/add-workout")
+    def add_workout():
+        return app.send_static_file("add_workout.html")
+
     @app.get("/health")
     def health_check():
         try:

@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('workouts.static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Workout Tracker</h1>
+      </div>
+      <form action="/users" method="POST">
+        <div class="form-group">
+          <label
+            >Username: <input type="text" name="username" required
+          /></label>
+          <div class="btn">
+            <button type="submit">Login</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
