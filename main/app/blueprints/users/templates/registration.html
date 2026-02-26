@@ -2,13 +2,13 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login</title>
+        <title>Register</title>
         <link rel="stylesheet" href="{{ url_for('workouts.static', filename='style.css') }}">
     </head>
     <body>
     <div class = "container">
         <div class = "header">
-            <h1>Workout Tracker</h1>
+            <h1>Register</h1>
         </div>
         <form action="/users" method="POST">
             <div class = "form-group">
@@ -17,11 +17,9 @@
             <label>Password: <input type="password" name="password" required></label>
             </div>
             <div class = "btn">
-            <button type="submit">Login</button>
+            <button type="submit">Register</button>
             </div>
         </form>
-
-        <a href="registration.html"> Don't have an account yet? Register</a>
     </div>
     </body>
 </html>
