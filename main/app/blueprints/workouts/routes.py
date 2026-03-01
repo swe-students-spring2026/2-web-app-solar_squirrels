@@ -51,4 +51,4 @@ def get_workout(user_uuid, workout_uuid):
         return jsonify({"error": "Workout not found"}), 404
 
     return jsonify(workout), 200
->>>>>>> 2bea88b175f2b7614ac81cdde4e02ce73a22080f
+
