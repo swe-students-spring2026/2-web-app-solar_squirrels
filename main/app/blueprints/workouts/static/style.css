@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  color: #111;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+  padding: 16px;
+}
+
+/* Header layout */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+/* Button */
+.btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #2f6bff;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* Search area */
+.search {
+  margin: 12px 0;
+}
+
+/* Input fields */
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px; /* prevents zoom on iPhone */
+}
+
+/* Workout cards */
+.card {
+  background: white;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #e5e5e5;
+}
+
+/* Date text */
+.date {
+  color: gray;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+/* Workout info line */
+.line {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Form spacing */
+.form-group {
+  margin-bottom: 12px;
+}
+
+label {
+  font-size: 13px;
+  color: gray;
+}
