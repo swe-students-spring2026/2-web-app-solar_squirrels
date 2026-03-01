@@ -19,7 +19,8 @@ def create_app():
     
     # Register blueprints
     # from app.blueprints.users.routes import users_bp
-    # from app.blueprints.workouts.routes import workouts_bp
+    from app.blueprints.workouts.routes import workouts_bp
+    app.register_blueprint(workouts_bp)
     
     # app.register_blueprint(users_bp, url_prefix='/api/users')
     # app.register_blueprint(workouts_bp, url_prefix='/api/workouts')
