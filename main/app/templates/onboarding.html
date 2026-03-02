@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Info</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Where are you at, and what do you hope to achieve?</h1>
+      </div>
+
+      <!--Form-->
+      <form action="/api/auth/onboarding" method="POST">
+        <div class="form-group">
+          <p>Enter your age</p>
+          <label>Age: <input type="text" name="age" required /></label>
+        </div>
+
+        <div class="form-group">
+          <p>Enter your height in inches</p>
+          <label>Height: <input type="text" name="height" required /></label>
+        </div>
+
+        <div class="form-group">
+          <p>Enter your weight in pounds</p>
+          <label>Weight: <input type="text" name="weight" required /></label>
+        </div>
+
+        <div class="form-group">
+          <p>What is your activity level?</p>
+          <div class="radio-option">
+            <input
+              type="radio"
+              id="sedentary"
+              name="activity"
+              value="sedentary"
+            />
+            <label for="sedentary">Sedentary - I don't exercise much</label>
+          </div>
+          <div class="radio-option">
+            <input
+              type="radio"
+              id="lightly_active"
+              name="activity"
+              value="lightly_active"
+            />
+            <label for="lightly_active"
+              >Lightly active - I exercise 1-3 times/week</label
+            >
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="active" name="activity" value="active" />
+            <label for="active">Active - I exercise 4-5 times/week</label>
+          </div>
+          <div class="radio-option">
+            <input
+              type="radio"
+              id="very_active"
+              name="activity"
+              value="very_active"
+            />
+            <label for="very_active"
+              >Very active - I exercise nearly every day</label
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <p>What are your goals?</p>
+          <div class="radio-option">
+            <input
+              type="radio"
+              id="lose_weight"
+              name="goals"
+              value="lose_weight"
+            />
+            <label for="lose_weight">Lose weight</label>
+          </div>
+          <div class="radio-option">
+            <input
+              type="radio"
+              id="maintain_weight"
+              name="goals"
+              value="maintain_weight"
+            />
+            <label for="maintain_weight">Maintain weight</label>
+          </div>
+          <div class="radio-option">
+            <input
+              type="radio"
+              id="gain_weight"
+              name="goals"
+              value="gain_weight"
+            />
+            <label for="gain_weight">Gain weight</label>
+          </div>
+        </div>
+        <br />
+
+        <div>
+          <button
+            type="submit"
+            class="btn"
+            style="width: 100%; margin-top: 10px"
+          >
+            I'm Ready!
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

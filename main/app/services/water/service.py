@@ -1,4 +1,4 @@
-from app.blueprints.water.models import Water, WaterItem
+from app.services.water.models import Water, WaterItem
 from app.extensions import get_db
 from datetime import datetime
 from pymongo import ReturnDocument

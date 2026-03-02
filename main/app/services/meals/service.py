@@ -1,4 +1,4 @@
-from app.blueprints.meals.models import Meal, MealEntry
+from app.services.meals.models import Meal, MealEntry
 from app.extensions import get_db
 from datetime import datetime
 from pymongo import ReturnDocument
