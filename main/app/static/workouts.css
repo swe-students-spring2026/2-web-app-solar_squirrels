@@ -1,0 +1,137 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  color: #111;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+  padding: 16px;
+}
+
+/* Header layout */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+/* Button */
+.btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #2f6bff;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* Search area */
+.search {
+  margin: 12px 0;
+}
+
+/* Input fields */
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* Workout cards */
+.card {
+  background: white;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #e5e5e5;
+}
+
+/* Date text */
+.date {
+  color: gray;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+/* Workout info line */
+.line {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Form spacing */
+.form-group {
+  margin-bottom: 12px;
+}
+
+label {
+  font-size: 13px;
+  color: gray;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom: 10px;
+}
+.back {
+  text-decoration: none;
+  color: #111;
+  font-size: 14px;
+}
+
+.btn-secondary {
+  background: #111;
+}
+
+.btn-danger {
+  background: #d92d20;
+}
+
+.full { 
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.card-link { 
+  display: block;
+  text-decoration: none;
+  color: #111;
+}
+
+.card-link:hover { 
+  border-color: #cfd8ff;
+}
+
+.status { 
+  font-size: 13px;
+  color: gray;
+  margin: 8px 0;
+}
+
+.meta {
+  font-size: 13px;
+  color: gray;
+  margin: 10px 0 0 0;
+}
+
+.sets {
+  margin: 6px 0 0 18px;
+  padding: 0;
+  font-size: 14px;
+}

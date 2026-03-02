@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workout Detail</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='workouts.css') }}">
+</head>
+<body>
+  <div class="container">
+    
+    <div class="topbar">
+      <!-- Route -->
+      <a class="back" href="{{ url_for('workouts.workout_list_page', user_uuid=user_uuid) }}">← Workouts</a>
+    </div>
+
+    <h1>Workout Detail</h1>
+
+    <div class="card">
+      <div class="date">{{ workout.date }}</div>
+      <div class="line">{{ workout.workout.type }} • {{ workout.workout.duration }} min</div>
+    
+      {% if workout.workout.sets %}
+        <p class="meta">Sets:</p>
+        <ul class="sets">
+          {% for s in workout.workout.sets %}
+            <li>{{ s.reps }} reps{% if s.weight is not none %} • {{ s.weight }} lb{% endif %}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if workout.workout.calories is not none %}
+        <p class="meta">Calories: {{ workout.workout.calories }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Edit and Delete button -->
+    <!-- Edit (go to edit_workout page)-->
+    <a class="btn full" href="{{ url_for('workouts.edit_workout_page', user_uuid=user_uuid, workout_uuid=workout.workout_uuid) }}">Edit</a>
+
+    <!-- Delete (Delte One Workout from db) -->
+    <form method="POST" action="{{ url_for('workouts.delete_workout_submit', workout_uuid=workout.workout_uuid, user_uuid=user_uuid) }}">
+      <button class="btn btn-danger full" type="submit">Delete</button>
+    </form>
+
+  </div>
+</body>
+</html>

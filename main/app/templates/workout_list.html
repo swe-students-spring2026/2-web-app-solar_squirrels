@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workouts</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='workouts.css') }}">
+</head>
+<body>
+<div class="container">
+
+  <div class="topbar">
+    <a class="back" href="/dashboard">← Dashboard</a>
+    <a class="btn" href="{{ url_for('workouts.add_workout_page', user_uuid=user_uuid) }}">+ Add Workout</a>
+  </div>
+  <h1>My Workouts</h1>
+
+  <!-- Search by date-->
+  <form class="search" method="GET" action="{{ url_for('workouts.workout_list_page', user_uuid=user_uuid) }}">
+    <label for="date">Search by date</label>
+    <input id="date" type="date" name="date" value="{{ request.args.get('date','') }}">
+    <button class="btn btn-secondary" type="submit">Search</button>
+  </form>
+
+  <!-- If User Search by Date-->
+   {% if request.args.get('date') %}
+      <p class="status">Showing results for {{ request.args.get('date') }}</p>
+    {% endif %}
+
+    <!-- Workout Cards List -->
+    {% if workouts and workouts|length > 0 %}
+      {% for w in workouts %}
+        <a class="card card-link" href="{{ url_for('workouts.workout_detail_page', user_uuid=user_uuid, workout_uuid=w.workout_uuid) }}">
+          <div class="date">{{ w.date }}</div>
+          <div class="line">{{ w.workout.type }} • {{ w.workout.duration }} min</div>
+        </a>
+      {% endfor %}
+    {% else %}
+      <p class="status">No workouts found.</p>
+    {% endif %}
+
+  </div>
+</body>
+</html>
