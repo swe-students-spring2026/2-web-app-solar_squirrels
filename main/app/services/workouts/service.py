@@ -39,7 +39,73 @@ class WorkoutService:
         db.workouts.insert_one(validated_workout.model_dump())
 
         return validated_workout.model_dump(mode="json")
+    
+    @staticmethod
+    def update_workout(user_uuid: str, workout_uuid: str, update_data: dict):
+        db = get_db()
 
+        existing_workout_doc = db.workouts.find_one({
+            "user_uuid": user_uuid,
+            "workout_uuid": workout_uuid
+        })
+
+        if not existing_workout_doc:
+            return None
+
+        date_str = update_data.get("date")
+        if date_str:
+            try:
+                date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+            except ValueError:
+                date_obj = existing_workout_doc.get("date")
+        else:
+            date_obj = existing_workout_doc.get("date")
+
+        raw_reps = update_data.get("reps")
+        raw_weight = update_data.get("weight")
+        current_detail = existing_workout_doc.get("workout", {})
+        
+        updated_detail = {
+            "type": update_data.get("type", current_detail.get("type")),
+            "duration": int(update_data["duration"]) if update_data.get("duration") and str(update_data["duration"]).strip() != "" else current_detail.get("duration"),
+            "calories": float(update_data["calories"]) if update_data.get("calories") and str(update_data["calories"]).strip() != "" else current_detail.get("calories"),
+        }
+
+        if raw_reps is not None and str(raw_reps).strip() != "":
+            updated_detail["sets"] = [{
+                "reps": int(raw_reps),
+                "weight": float(raw_weight) if raw_weight and str(raw_weight).strip() != "" else None
+            }]
+        else:
+            updated_detail["sets"] = current_detail.get("sets")
+
+        workout_payload = {
+            "workout_uuid": workout_uuid,
+            "user_uuid": user_uuid,
+            "date": date_obj,
+            "workout": updated_detail
+        }
+        print(workout_payload)
+        
+        validated_workout = Workout(**workout_payload)
+
+        db.workouts.update_one(
+            {"workout_uuid": workout_uuid, "user_uuid": user_uuid},
+            {"$set": validated_workout.model_dump()}
+        )
+
+        return validated_workout.model_dump(mode="json")
+    
+    @staticmethod
+    def delete_workout(user_uuid: str, workout_uuid: str):
+        db = get_db()
+
+        result = db.workouts.delete_one({
+            "user_uuid": user_uuid,
+            "workout_uuid": workout_uuid
+        })
+
+        return result.deleted_count > 0
 
     @staticmethod
     def get_workouts_by_user(user_uuid: str):

@@ -1,43 +1,86 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Workouts</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='workouts.css') }}">
-</head>
-<body>
-<div class="container">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workouts</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='workouts.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <a class="back" href="{{ url_for('dashboard_page') }}">← Dashboard</a>
+      </div>
+      <h1>My Workouts</h1>
 
-  <div class="topbar">
-    <a class="back" href="/dashboard">← Dashboard</a>
-    <a class="btn" href="{{ url_for('workouts.add_workout_page', user_uuid=user_uuid) }}">+ Add Workout</a>
-  </div>
-  <h1>My Workouts</h1>
+      <div class="section">
+        <form
+          class="search"
+          method="GET"
+          action="{{ url_for('workouts_page') }}"
+        >
+          <label for="date">Search by date</label>
+          <input
+            id="date"
+            type="date"
+            name="date"
+            value="{{ request.args.get('date','') }}"
+          />
+          <button
+            class="btn"
+            type="submit"
+            style="width: 100%; margin-top: 10px; margin-bottom: 20px"
+          >
+            Search
+          </button>
+        </form>
+      </div>
 
-  <!-- Search by date-->
-  <form class="search" method="GET" action="{{ url_for('workouts.workout_list_page', user_uuid=user_uuid) }}">
-    <label for="date">Search by date</label>
-    <input id="date" type="date" name="date" value="{{ request.args.get('date','') }}">
-    <button class="btn btn-secondary" type="submit">Search</button>
-  </form>
-
-  <!-- If User Search by Date-->
-   {% if request.args.get('date') %}
+      {% if request.args.get('date') %}
       <p class="status">Showing results for {{ request.args.get('date') }}</p>
-    {% endif %}
+      {% endif %} {% if workouts and workouts|length > 0 %} {% for item in
+      workouts %}
+      <div class="workout-card">
+        <div class="workout-header">
+          <div style="display: flex; flex-direction: column">
+            <span class="workout-type">{{ item.workout.type }}</span>
+            <span class="workout-date">{{ item.date[:10] }}</span>
+          </div>
 
-    <!-- Workout Cards List -->
-    {% if workouts and workouts|length > 0 %}
-      {% for w in workouts %}
-        <a class="card card-link" href="{{ url_for('workouts.workout_detail_page', user_uuid=user_uuid, workout_uuid=w.workout_uuid) }}">
-          <div class="date">{{ w.date }}</div>
-          <div class="line">{{ w.workout.type }} • {{ w.workout.duration }} min</div>
-        </a>
-      {% endfor %}
-    {% else %}
+          <a
+            href="{{ url_for('edit_workout_page', workout_id = item.workout_uuid)}}"
+            class="btn-edit"
+            >Edit</a
+          >
+        </div>
+
+        <div class="workout-stats">
+          <div class="stat-item">
+            <strong>{{ item.workout.duration }}</strong> mins
+          </div>
+          {% if item.workout.calories %}
+          <div class="stat-item">
+            <strong>{{ item.workout.calories }}</strong> kcal
+          </div>
+          {% endif %}
+        </div>
+
+        {% if item.workout.sets %}
+        <div class="workout-sets">
+          {% for set in item.workout.sets %}
+          <div class="set-tag">
+            {{ set.reps }} reps {% if set.weight %}@ {{ set.weight }} lbs{%
+            endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %} {% else %}
       <p class="status">No workouts found.</p>
-    {% endif %}
-
-  </div>
-</body>
+      {% endif %}
+    </div>
+  </body>
 </html>

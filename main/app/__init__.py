@@ -17,14 +17,8 @@ def create_app():
     from app.extensions import init_db
     init_db(app)
 
-    print("-------------------------------")
-    print("AVAILABLE ENDPOINTS:")
-    for rule in app.url_map.iter_rules():
-        print(rule)
-    print("-------------------------------")
 
-
-    '''------- AUTH ROUTES -------'''
+    '''------- AUTH API ROUTES -------'''
 
     @app.post("/api/auth/register")
     def register():
@@ -98,7 +92,7 @@ def create_app():
         flash("You have been logged out.", "info")
         return redirect(url_for("login_page"))
     
-    '''------- WORKOUT ROUTES -------'''
+    '''------- WORKOUT API ROUTES -------'''
 
     @app.post("/api/workouts/add")
     def handle_add_workout():
@@ -119,14 +113,66 @@ def create_app():
             flash("Workout saved successfully!", "success")
         except Exception as e:
             flash(f"Error saving workout: {str(e)}", "error")
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("dashboard_page"))
 
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("dashboard_page"))
     
+    @app.post("/api/workouts/update")
+    def handle_update_workout():
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
+
+        workout_uuid = request.form.get("workout_uuid")
+        if not workout_uuid:
+            flash("Missing workout ID.", "error")
+            return redirect(url_for("workouts_page"))
+
+        workout_data = {
+            "date": request.form.get("date"),
+            "type": request.form.get("type"),
+            "duration": request.form.get("duration"),
+            "reps": request.form.get("reps"),
+            "weight": request.form.get("weight"),
+            "calories": request.form.get("calories")
+        }
+
+        try:
+            updated = WorkoutService.update_workout(user_uuid, workout_uuid, workout_data)
+            
+            if updated:
+                flash("Workout updated successfully!", "success")
+            else:
+                flash("Workout not found or unauthorized.", "error")
+                
+        except Exception as e:
+            flash(f"Error updating workout: {str(e)}", "error")
+
+        return redirect(url_for("workouts_page"))
     
+    @app.post("/api/workouts/delete")
+    def handle_delete_workout():
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
 
+        workout_uuid = request.form.get("workout_uuid")
+        
+        if not workout_uuid:
+            flash("Workout ID is required.", "error")
+            return redirect(url_for("workouts_page"))
 
+        try:
+            success = WorkoutService.delete_workout(user_uuid, workout_uuid)
+            if success:
+                flash("Workout deleted successfully!", "success")
+            else:
+                flash("Workout not found.", "error")
+        except Exception as e:
+            flash(f"An error occurred while deleting the workout: {str(e)}", "error")
 
+        return redirect(url_for("workouts_page"))
+        
 
 
     '''------- PAGE ROUTES -------'''
@@ -152,6 +198,43 @@ def create_app():
         
         return render_template("dashboard.html", workouts=workouts, weekly_count=weekly_count, recommendation=recommendation)
     
+    @app.route("/workouts")
+    def workouts_page():
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
+        
+        search_date = request.args.get('date')
+        all_workouts = WorkoutService.get_workouts_by_user(user_uuid)
+
+        if search_date:
+            workouts = [w for w in all_workouts if w.get('date', '').startswith(search_date)]
+        else:
+            workouts = all_workouts
+
+        return render_template("workout_list.html", workouts=workouts)
+    
+    @app.route("/workouts/edit/<workout_id>")
+    def edit_workout_page(workout_id):
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
+        
+        workout = WorkoutService.get_workout_by_uuid(user_uuid, workout_id)
+        if not workout:
+            flash("Workout not found.", "error")
+            return redirect(url_for("workouts_page"))
+        
+        raw_date = workout.get("date")
+        
+        if raw_date and isinstance(raw_date, str):
+            workout["date_str"] = raw_date[:10]
+        else:
+            from datetime import datetime
+            workout["date_str"] = datetime.now().strftime('%Y-%m-%d')
+        
+        return render_template("edit_workout.html", workout=workout)
+    
     @app.route("/register")
     def register_page():
         return render_template("registration.html")
@@ -173,5 +256,6 @@ def create_app():
             return jsonify({"status": "connected to mongo"})
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+        
     
     return app

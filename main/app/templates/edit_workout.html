@@ -1,42 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Workout</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='workouts.css') }}">
-</head>
-<body>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Workout</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='workouts.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <a class="back" href="{{ url_for('workouts_page') }}">← Workouts</a>
+      </div>
+      <h1 style="margin-bottom: 10px">Edit Workouts</h1>
+      <div class="form-container">
+        <form method="post" action="{{ url_for('handle_update_workout') }}">
+          <div class="form-group">
+            <input
+              type="hidden"
+              name="workout_uuid"
+              value="{{ workout.workout_uuid }}"
+            />
+            <label>Date</label>
+            <input
+              type="date"
+              name="date"
+              value="{{ workout.date_str }}"
+              required
+            />
+          </div>
 
-<div class="container">
+          <div class="form-group">
+            <label>Type</label>
+            <input
+              type="text"
+              name="type"
+              value="{{ workout.workout.type }}"
+              required
+            />
+          </div>
 
-  <div class="header">
-    <h1>Edit Workout</h1>
-    <a class="btn" href="{{ url_for('workouts.workout_detail_page', user_uuid=user_uuid, workout_uuid=workout.workout_uuid) }}">Back</a>
-  </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Duration (mins)</label>
+              <input
+                type="number"
+                name="duration"
+                min="0"
+                value="{{ workout.workout.duration }}"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Calories</label>
+              <input
+                type="number"
+                name="calories"
+                min="0"
+                value="{{ workout.workout.calories or '' }}"
+              />
+            </div>
+          </div>
 
-  <!-- Edit form： Only date，type, duration -->
-  <form method="post" action="{{ url_for('workouts.edit_workout_submit', user_uuid=user_uuid, workout_uuid=workout.workout_uuid) }}">
+          <h3 style="margin: 20px 0 10px 0; font-size: 16px">Sets</h3>
+          {% if workout.workout.sets %} {% for set in workout.workout.sets %}
+          <div class="form-row">
+            <div class="form-group">
+              <label>Reps</label>
+              <input
+                type="number"
+                name="reps"
+                value="{{ set.reps }}"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Weight (lbs)</label>
+              <input
+                type="number"
+                step="0.1"
+                name="weight"
+                value="{{ set.weight or '' }}"
+              />
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <p style="font-size: 13px; color: gray">
+            No sets recorded for this workout.
+          </p>
+          {% endif %}
 
-    <div class="form-group">
-      <label>Date</label>
-      
-      <input type="date" name="date" value="{{ workout.date_str }}" required>
+          <button
+            class="btn"
+            type="submit"
+            style="width: 100%; margin-top: 20px"
+          >
+            Save Changes
+          </button>
+          <button
+            class="btn"
+            type="submit"
+            formaction="{{ url_for('handle_delete_workout') }}"
+            style="width: 100%; margin-top: 10px; background-color: #e74c3c"
+          >
+            Delete Workout
+          </button>
+        </form>
+      </div>
     </div>
-
-    <div class="form-group">
-      <label>Type</label>
-      <input type="text" name="type" value="{{ workout.workout.type }}" required>
-    </div>
-
-    <div class="form-group">
-      <label>Duration (minutes)</label>
-      <input type="number" name="duration" min="0" value="{{ workout.workout.duration }}" required>
-    </div>
-
-    <button class="btn" type="submit">Save Changes</button>
-  </form>
-
-</div>
-
-</body>
+  </body>
 </html>
