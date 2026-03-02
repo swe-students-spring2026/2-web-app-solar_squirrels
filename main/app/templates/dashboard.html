@@ -19,10 +19,16 @@
           Calories: <strong>500/2000</strong> | Water:
           <strong>64/128 oz</strong>
         </p>
+        <p>Workouts this week: <strong>{{ weekly_count }}</strong></p>
+      </div>
+
+      <div class="button-group">
+        <a href="#" class="btn btn-secondary">View Workouts</a>
+        <a href="#" class="btn btn-secondary">View Nutrition</a>
       </div>
 
       <div class="section">
-        <h2>Quick Log</h2>
+        <h1 style="margin-bottom: 10px">Quick Log</h1>
         <form method="POST" action="{{ url_for('handle_add_workout') }}">
           <div class="form-group">
             <label>Workout Type</label>
@@ -65,44 +71,27 @@
           </button>
         </form>
       </div>
-      <hr />
+
       <div class="section">
-        <h2 class="section-title">Recent Workouts</h2>
+        <h1 class="recommendation-title">
+          Recommended Workout ({{ recommendation.level | capitalize }})
+        </h1>
+        <p class="recommendation-desc">{{ recommendation.description }}</p>
 
-        {% if workouts %} {% for item in workouts %}
-        <div class="workout-card">
+        {% for group in recommendation.groups %}
+        <div class="workout-card recommendation-card">
           <div class="workout-header">
-            <span class="workout-type">{{ item.workout.type }}</span>
-            <span class="workout-date">{{ item.date[:10] }}</span>
+            <span class="workout-type">{{ group.name }} Day</span>
           </div>
-
-          <div class="workout-stats">
-            <div class="stat-item">
-              <strong>{{ item.workout.duration }}</strong> mins
-            </div>
-            {% if item.workout.calories %}
-            <div class="stat-item">
-              <strong>{{ item.workout.calories }}</strong> kcal
-            </div>
-            {% endif %}
-          </div>
-
-          {% if item.workout.sets %}
-          <div class="workout-sets">
-            {% for set in item.workout.sets %}
-            <div class="set-tag">
-              {{ set.reps }} reps {% if set.weight %}@ {{ set.weight }} lbs{%
-              endif %}
+          <div class="workout-sets recommendation-sets">
+            {% for ex in group.exercises %}
+            <div class="set-tag recommendation-exercise">
+              {{ ex.name }}: <strong>{{ ex.sets }}x{{ ex.reps }}</strong>
             </div>
             {% endfor %}
           </div>
-          {% endif %}
         </div>
-        {% endfor %} {% else %}
-        <p style="color: gray; font-size: 14px; text-align: center">
-          No workouts logged yet.
-        </p>
-        {% endif %}
+        {% endfor %}
       </div>
     </div>
   </body>

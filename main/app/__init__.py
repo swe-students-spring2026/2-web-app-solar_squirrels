@@ -1,8 +1,10 @@
 import os
+from datetime import datetime, timedelta
 from flask import Flask, app, request, jsonify, session, redirect, url_for, render_template, flash
 from dotenv import load_dotenv
 from app.services.users.service import UserService
 from app.services.workouts.service import WorkoutService
+from app.services.presets.service import PresetService
 from app.extensions import init_db, get_db
 
 load_dotenv()
@@ -139,9 +141,16 @@ def create_app():
         if not user_uuid:
             return redirect(url_for("login_page"))
         
+        user = UserService.get_user_by_uuid(user_uuid)
+        if not user or not user.activity:
+            return redirect(url_for("onboarding"))
+        recommendation = PresetService.get_preset_for_user(user.activity)
+
         workouts = WorkoutService.get_workouts_by_user(user_uuid)
+        week_ago = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+        weekly_count = sum(1 for item in workouts if item.get('date', '')[:10] >= week_ago)
         
-        return render_template("dashboard.html", workouts=workouts)
+        return render_template("dashboard.html", workouts=workouts, weekly_count=weekly_count, recommendation=recommendation)
     
     @app.route("/register")
     def register_page():
