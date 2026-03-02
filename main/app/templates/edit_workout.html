@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Workout</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='workouts.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>Edit Workout</h1>
+    <a class="btn" href="{{ url_for('workouts.workout_detail_page', user_uuid=user_uuid, workout_uuid=workout.workout_uuid) }}">Back</a>
+  </div>
+
+  <!-- Edit form： Only date，type, duration -->
+  <form method="post" action="{{ url_for('workouts.edit_workout_submit', user_uuid=user_uuid, workout_uuid=workout.workout_uuid) }}">
+
+    <div class="form-group">
+      <label>Date</label>
+      
+      <input type="date" name="date" value="{{ workout.date_str }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Type</label>
+      <input type="text" name="type" value="{{ workout.workout.type }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Duration (minutes)</label>
+      <input type="number" name="duration" min="0" value="{{ workout.workout.duration }}" required>
+    </div>
+
+    <button class="btn" type="submit">Save Changes</button>
+  </form>
+
+</div>
+
+</body>
+</html>
