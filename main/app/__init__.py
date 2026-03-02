@@ -1,10 +1,8 @@
 import os
-import uuid as uuid_lib
-from datetime import datetime, timezone
-from flask import Flask, request, jsonify, session, redirect, url_for, render_template, flash
+from flask import Flask, app, request, jsonify, session, redirect, url_for, render_template, flash
 from dotenv import load_dotenv
-from app.blueprints.users.service import UserService
-from app.blueprints.workouts.service import WorkoutService
+from app.services.users.service import UserService
+from app.services.workouts.service import WorkoutService
 from app.extensions import init_db, get_db
 
 load_dotenv()
@@ -17,12 +15,6 @@ def create_app():
     from app.extensions import init_db
     init_db(app)
 
-    from app.blueprints.users.routes import users_bp
-    from app.blueprints.workouts.routes import workouts_bp
-    
-    app.register_blueprint(users_bp, url_prefix="/api/users")
-    app.register_blueprint(workouts_bp, url_prefix="/api/users/<string:user_uuid>/workouts")
-
     print("-------------------------------")
     print("AVAILABLE ENDPOINTS:")
     for rule in app.url_map.iter_rules():
@@ -34,19 +26,58 @@ def create_app():
 
     @app.post("/api/auth/register")
     def register():
-        data = request.json
-        if not data.get("username") or not data.get("password"):
-            return jsonify({"error": "Username and password required"}), 400
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if not username or not password:
+            flash("Username and password required", "error")
+            return redirect(url_for("login_page"))
             
         try:
-            user = UserService.create_user(data)
-            return jsonify({"message": "User registered", "uuid": user.uuid}), 201
+            user = UserService.create_user({
+                "username": username,
+                "password": password
+            })
+            
+            session["user_uuid"] = user.uuid
+            
+            return redirect(url_for("onboarding"))
+            
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            flash(f"Registration failed: {str(e)}", "error")
+            return redirect(url_for("login_page"))
+        
+    @app.post("/api/auth/onboarding")
+    def handle_onboarding():
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
 
+        try:
+            update_data = {
+                "age": request.form.get("age"),
+                "height": request.form.get("height"),
+                "weight": request.form.get("weight"),
+                "activity": request.form.get("activity"),
+                "goals": request.form.get("goals")
+            }
+
+            updated_user = UserService.update_user(user_uuid, update_data)
+            
+            if not updated_user:
+                flash("User not found", "error")
+                return redirect(url_for("login_page"))
+
+            flash("Profile updated!", "success")
+            return redirect(url_for("dashboard_page"))
+
+        except Exception as e:
+            flash(f"Profile update failed: {str(e)}", "error")
+            return redirect(url_for("onboarding"))
+        
     @app.post("/api/auth/login")
     def login():
-        data = request.form if request.form else request.json
+        data = request.form
         user = UserService.authenticate_user(
             data.get("username"), 
             data.get("password")
@@ -54,14 +85,16 @@ def create_app():
         
         if user:
             session["user_uuid"] = user["uuid"]
-            return redirect(url_for('dashboard'))
+            return redirect(url_for("dashboard_page"))
         
-        return jsonify({"error": "Invalid username or password"}), 401
+        flash("Invalid username or password", "error")
+        return redirect(url_for("login_page"))
 
     @app.post("/api/auth/logout")
     def logout():
         session.clear()
-        return jsonify({"message": "Logged out"}), 200
+        flash("You have been logged out.", "info")
+        return redirect(url_for("login_page"))
     
     '''------- WORKOUT ROUTES -------'''
 
@@ -98,23 +131,29 @@ def create_app():
 
     @app.route("/")
     def login_page():
-        return app.send_static_file("index.html")
+        return render_template("index.html")
 
     @app.route("/dashboard")
-    def dashboard():
+    def dashboard_page():
         user_uuid = session.get("user_uuid")
         if not user_uuid:
             return redirect(url_for("login_page"))
         
-        return render_template("dashboard.html")
+        workouts = WorkoutService.get_workouts_by_user(user_uuid)
+        
+        return render_template("dashboard.html", workouts=workouts)
     
-    app.route("/workout/add-workout")
-    def add_workout():
+    @app.route("/register")
+    def register_page():
+        return render_template("registration.html")
+    
+    @app.route("/onboarding")
+    def onboarding():
         user_uuid = session.get("user_uuid")
         if not user_uuid:
             return redirect(url_for("login_page"))
-
-        return render_template("add_workout.html")
+        
+        return render_template("onboarding.html")
 
     @app.get("/health")
     def health_check():

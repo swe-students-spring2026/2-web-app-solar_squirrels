@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, render_template
 from pydantic import ValidationError
-from app.blueprints.workouts.service import WorkoutService
+from app.services.workouts.service import WorkoutService
 
 
 workouts_bp = Blueprint(

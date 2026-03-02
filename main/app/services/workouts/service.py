@@ -1,7 +1,7 @@
 import uuid as uuid_lib
 from datetime import datetime, timezone
 from app.extensions import get_db
-from app.blueprints.workouts.models import Workout
+from app.services.workouts.models import Workout
 
 
 class WorkoutService:

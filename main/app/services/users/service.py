@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from pymongo import ReturnDocument
 from app.extensions import get_db
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.blueprints.users.models import (
+from app.services.users.models import (
     UserCreate,
     UserUpdate,
     User,

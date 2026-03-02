@@ -2,18 +2,15 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles.css') }}"
-    />
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1>Workout Tracker</h1>
+        <h1>Register</h1>
       </div>
-      <form action="/api/auth/login" method="POST">
+      <form action="/api/auth/register" method="POST">
         <div class="form-group">
           <label
             >Username:
@@ -24,9 +21,14 @@
             >Password:
             <input type="password" name="password" required />
           </label>
-          <div class="btn">
-            <button type="submit">Login</button>
-          </div>
+
+          <button
+            class="btn"
+            type="submit"
+            style="width: 100%; margin-top: 10px; background: #28a745"
+          >
+            Register
+          </button>
         </div>
       </form>
     </div>
