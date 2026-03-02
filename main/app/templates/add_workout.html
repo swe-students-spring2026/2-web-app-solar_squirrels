@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Workout</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='workouts.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>Add Workout</h1>
+    <a class="btn" href="{{ url_for('workouts.workout_list_page', user_uuid=user_uuid) }}">Back</a>
+  </div>
+
+  <!-- Form -->
+  <form method="post" action="{{ url_for('workouts.add_workout_page', user_uuid=user_uuid) }}">
+
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" name="date" required>
+    </div>
+
+    <div class="form-group">
+      <label>Type</label>
+      <input type="text" name="type" placeholder="Strength, Cardio..." required>
+    </div>
+
+    <div class="form-group">
+      <label>Duration (minutes)</label>
+      <input type="number" name="duration" min="0" required>
+    </div>
+
+    <div class="form-group">
+      <label>Reps (optional)</label>
+      <input type="number" name="reps" min="0">
+    </div>
+
+    <div class="form-group">
+      <label>Weight (optional)</label>
+      <input type="number" name="weight" min="0" step="0.1">
+    </div>
+
+    <div class="form-group">
+      <label>Calories (optional)</label>
+      <input type="number" name="calories" min="0">
+    </div>
+
+    <button class="btn" type="submit">Save</button>
+
+  </form>
+
+</div>
+
+</body>
+</html>
