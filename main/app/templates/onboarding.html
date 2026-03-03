@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>User Info</title>
+        <link rel="stylesheet" href="{{ url_for('workouts.static', filename='style.css') }}">
+    </head>
+    <body>
+    <div class="container">
+        <div class="header">
+        <h1>Where are you at, and what do you hope to achieve?</h1>
+        </div>
+
+        <!--Form-->
+        <form action="/users/:uuid" method="PUT">
+            <div class = "form-group">
+            <p>Enter your age</p>
+            <label>Age: <input type="text" name="age" required></label>
+            </div>
+
+            <div class = "form-group">
+            <p>Enter your height in inches</p>
+            <label>Height: <input type="text" name="height" required></label>
+            </div>
+
+            <div class = "form-group">
+            <p>Enter your weight in pounds</p>
+            <label>Weight: <input type="text" name="weight" required></label>
+            </div>
+
+            <div class = "form-group">
+            <p>What is your activity level?</p>
+            <input type="radio" id = "sedentary" name = "activity" value = "sedentary">
+            <label for="sedentary">Sedentary</label>
+            <input type="radio" id = "lightly_active" name = "activity" value = "lightly_active">
+            <label for="lightly_active">Exercise 1-3 Times/Week</label>
+            <input type="radio" id = "active" name = "activity" value = "active">
+            <label for="active">Exercise 4-5 Times/Week</label>
+            <input type="radio" id = "very_active" name = "activity" value = "very_active">
+            <label for="very_active">Daily Exercise</label>
+            </div>
+
+            <div class = "form-group">
+            <p>What are your goals?</p>
+            <input type="radio" id = "lose_weight" name = "goals" value = "lose_weight">
+            <label for="lose_weight">Lose weight</label>
+            <input type="radio" id = "maintain_weight" name = "goals" value = "maintain_weight">
+            <label for="maintain_weight">Maintain weight</label>
+            <input type="radio" id = "gain_weight" name = "goals" value = "gain_weight">
+            <label for="gain_weight">Gain weight</label>
+            </div>
+            <br> 
+            
+            <div class = "btn">
+            <button type="submit">I'm Ready!</button>
+            </div>
+        </form>
+    </div>
+    </body>
+</html>
