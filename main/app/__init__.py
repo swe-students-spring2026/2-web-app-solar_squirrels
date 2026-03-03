@@ -173,7 +173,7 @@ def create_app():
 
         return redirect(url_for("workouts_page"))
         
-
+    #TODO: Daily maintenance calories
 
     '''------- PAGE ROUTES -------'''
 

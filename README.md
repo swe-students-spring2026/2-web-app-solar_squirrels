@@ -12,7 +12,7 @@ Empower individuals to achieve their fitness goals with a personalized, all-in-o
 
 ## Steps necessary to run the software
 
-See instructions. Delete this line and place instructions to download, configure, and run the software here.
+Copy the contents of the provided .env file into the "main" folder within the repository. From the repository root, run `python3 main/run.py`. Navigate to http://127.0.0.1:5001/ in the browser. You may then create an account, or use the provisional credentials (user: test password: test) to log in and begin using the app.
 
 ## Task boards
 
