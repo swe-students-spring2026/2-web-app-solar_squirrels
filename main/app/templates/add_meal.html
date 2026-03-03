@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Meal</title>
+  <link rel="stylesheet" href="{{ url_for('workouts.static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>Add Meal</h1>
+    <a class="btn" href="dashboard.html">Back</a>
+  </div>
+
+  <!-- Form -->
+  <form method="post" action=/users/:uuid/meals/:id>
+
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" name="date">
+    </div>
+
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label>Calories</label>
+        <input type="text" name="calories" required  min="0">
+    </div>
+
+    <div class="form-group">
+        <label>Protein</label>
+        <input type="text" name="protein" required min = "0">
+    </div>
+
+    <div class="form-group">
+        <label>Carbs</label>
+        <input type="text" name="carbs" required min="0">
+    </div>
+
+    <div class="form-group">
+        <label>Fat</label>
+        <input type="text" name="fat" required min="0">
+    </div>
+
+    <button class="btn" type="submit">Save</button>
+
+  </form>
+
+</div>
+
+</body>
+</html>
