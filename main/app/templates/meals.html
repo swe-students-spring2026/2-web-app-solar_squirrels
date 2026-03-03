@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meals</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='meals.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <a class="back" href="{{ url_for('dashboard_page') }}">← Dashboard</a>
+      </div>
+      <h1>My Meals</h1>
+
+      <div class="section">
+        <form
+          class="search"
+          method="GET"
+          action="/users/:uuid/meals/:date"
+        >
+          <label for="date">Search by date</label>
+          <input
+            id="date"
+            type="date"
+            name="date"
+            value="{{ request.args.get('date','') }}"
+          />
+          <button
+            class="btn"
+            type="submit"
+            style="width: 100%; margin-top: 10px; margin-bottom: 20px"
+          >
+            Search
+          </button>
+        </form>
+      </div>
+
+      {% if request.args.get('date') %}
+      <p class="status">Showing results for {{ request.args.get('date') }}</p>
+      {% endif %} {% if meals and meals|length > 0 %} {% for item in
+      meals %}
+      <div class="meal-card">
+        <div class="meal-header">
+          <div style="display: flex; flex-direction: column">
+            <span class="meal-type">{{ item.meal.type }}</span>
+          </div>
+        </div>
+
+        <div class="meal-macros">
+          <div class="stat-item">
+            <strong>{{ item.meal.calories }}</strong> kcal
+          </div>
+
+          <div class="stat-item">
+            <strong>{{ item.meal.protein }}</strong> g Protein
+          </div>
+
+          <div class="stat-item">
+            <strong>{{ item.meal.carbs }}</strong> g Carbs
+          </div>
+
+          <div class="stat-item">
+            <strong>{{ item.meal.fat }}</strong> g Fat
+          </div>
+        </div>
+
+      </div>
+      {% endfor %} {% else %}
+      <p class="status">No meals found.</p>
+      {% endif %}
+    </div>
+  </body>
+</html>
