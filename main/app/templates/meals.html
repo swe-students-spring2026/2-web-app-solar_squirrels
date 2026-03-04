@@ -19,7 +19,7 @@
         <form
           class="search"
           method="GET"
-          action="/users/:uuid/meals/:date"
+          action="{{ url_for('meals_page') }}"
         >
           <label for="date">Search by date</label>
           <input

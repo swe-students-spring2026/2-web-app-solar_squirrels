@@ -5,6 +5,10 @@ from dotenv import load_dotenv
 from app.services.users.service import UserService
 from app.services.workouts.service import WorkoutService
 from app.services.presets.service import PresetService
+from app.services.meals.service import MealService
+from app.services.meals.models import MealEntry, MealItem
+from app.services.water.service import WaterService
+from app.services.water.models import WaterItem
 from app.extensions import init_db, get_db
 
 load_dotenv()
@@ -175,6 +179,62 @@ def create_app():
         
     #TODO: Daily maintenance calories
 
+    '''------- MEAL API ROUTES -------'''
+
+    @app.post("/api/meals/add")
+    def handle_add_meal():
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
+
+        try:
+            date_str = request.form.get("date")
+            name = request.form.get("name")
+            calories = request.form.get("calories")
+            protein = request.form.get("protein")
+            carbs = request.form.get("carbs")
+            fat = request.form.get("fat")
+
+            date = datetime.fromisoformat(date_str)
+
+            meal_item = MealItem(
+                type=name,
+                calories=float(calories),
+                protein=float(protein),
+                carbs=float(carbs),
+                fat=float(fat)
+            )
+            meal_entry = MealEntry(items=[meal_item])
+
+            MealService.update_meals(user_uuid, date, meal_entry)
+            flash("Meal saved successfully!", "success")
+        except Exception as e:
+            flash(f"Error saving meal: {str(e)}", "error")
+
+        return redirect(url_for("meals_page"))
+
+    '''------- WATER API ROUTES -------'''
+
+    @app.post("/api/water/add")
+    def handle_add_water():
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
+
+        try:
+            date_str = request.form.get("date")
+            amount = request.form.get("amount")
+
+            date = datetime.fromisoformat(date_str)
+            water_item = WaterItem(time=datetime.now(), amount=int(amount))
+
+            WaterService.update_water(user_uuid, date, water_item)
+            flash("Water intake saved successfully!", "success")
+        except Exception as e:
+            flash(f"Error saving water intake: {str(e)}", "error")
+
+        return redirect(url_for("dashboard_page"))
+
     '''------- PAGE ROUTES -------'''
 
     @app.route("/")
@@ -195,8 +255,19 @@ def create_app():
         workouts = WorkoutService.get_workouts_by_user(user_uuid)
         week_ago = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
         weekly_count = sum(1 for item in workouts if item.get('date', '')[:10] >= week_ago)
-        
-        return render_template("dashboard.html", workouts=workouts, weekly_count=weekly_count, recommendation=recommendation)
+
+        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+        meal_data = MealService.get_user_meals(user_uuid, today)
+        total_calories = 0
+        for entry in meal_data.meals:
+            for item in entry.items:
+                total_calories += item.calories
+
+        water_data = WaterService.get_user_water(user_uuid, today)
+        total_water = sum(w.amount for w in water_data.water)
+
+        return render_template("dashboard.html", workouts=workouts, weekly_count=weekly_count, recommendation=recommendation, total_calories=int(total_calories), total_water=total_water)
     
     @app.route("/workouts")
     def workouts_page():
@@ -235,6 +306,40 @@ def create_app():
         
         return render_template("edit_workout.html", workout=workout)
     
+    @app.route("/meals")
+    def meals_page():
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
+
+        search_date = request.args.get('date')
+        if search_date:
+            date = datetime.fromisoformat(search_date)
+        else:
+            date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+        meal_data = MealService.get_user_meals(user_uuid, date)
+        meals = []
+        for entry in meal_data.meals:
+            for item in entry.items:
+                meals.append({"meal": item.model_dump()})
+
+        return render_template("meals.html", meals=meals)
+
+    @app.route("/meals/add")
+    def add_meal_page():
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
+        return render_template("add_meal.html")
+
+    @app.route("/water/add")
+    def add_water_page():
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
+        return render_template("add_water.html")
+
     @app.route("/register")
     def register_page():
         return render_template("registration.html")
