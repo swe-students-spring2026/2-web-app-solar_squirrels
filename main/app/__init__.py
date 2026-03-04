@@ -267,7 +267,9 @@ def create_app():
         water_data = WaterService.get_user_water(user_uuid, today)
         total_water = sum(w.amount for w in water_data.water)
 
-        return render_template("dashboard.html", workouts=workouts, weekly_count=weekly_count, recommendation=recommendation, total_calories=int(total_calories), total_water=total_water)
+        tdee = UserService.get_tdee_for_user(user_uuid)
+
+        return render_template("dashboard.html", workouts=workouts, weekly_count=weekly_count, recommendation=recommendation, total_calories=int(total_calories), total_water=total_water, tdee=tdee)
     
     @app.route("/workouts")
     def workouts_page():

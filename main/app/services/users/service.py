@@ -26,6 +26,35 @@ class UserService:
             return None
 
         return User(**user)
+    
+    @staticmethod
+    def get_tdee_for_user(uuid: str):
+        db = get_db()
+        user = db.users.find_one({"uuid": uuid})
+        if not user:
+            return None
+
+        weight = user.get("weight")
+        height = user.get("height")
+        age = user.get("age")
+        activity = user.get("activity")
+
+        if not all([weight, height, age, activity]):
+            return None
+        
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) - 78
+
+        activity_levels = {
+            "sedentary": 1.2,
+            "lightly_active": 1.4,
+            "active": 1.7,
+            "very_active": 2.0,
+        }
+
+        multiplier = activity_levels.get(activity, 1.2)
+        tdee = bmr * multiplier
+
+        return round(tdee)
 
 
     # Step 2 of user creation flow, update with personal details
