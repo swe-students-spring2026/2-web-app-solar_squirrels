@@ -211,7 +211,7 @@ def create_app():
         except Exception as e:
             flash(f"Error saving meal: {str(e)}", "error")
 
-        return redirect(url_for("meals_page"))
+        return redirect(url_for("nutrition_page"))
 
     '''------- WATER API ROUTES -------'''
 
@@ -233,7 +233,7 @@ def create_app():
         except Exception as e:
             flash(f"Error saving water intake: {str(e)}", "error")
 
-        return redirect(url_for("dashboard_page"))
+        return redirect(url_for("nutrition_page"))
 
     '''------- PAGE ROUTES -------'''
 
@@ -306,6 +306,42 @@ def create_app():
         
         return render_template("edit_workout.html", workout=workout)
     
+    @app.route("/nutrition")
+    def nutrition_page():
+        user_uuid = session.get("user_uuid")
+        if not user_uuid:
+            return redirect(url_for("login_page"))
+
+        search_date = request.args.get('date')
+        if search_date:
+            date = datetime.fromisoformat(search_date)
+        else:
+            date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+        selected_date = date.strftime('%Y-%m-%d')
+        today = datetime.now().strftime('%Y-%m-%d')
+
+        meal_data = MealService.get_user_meals(user_uuid, date)
+        meals = []
+        total_calories = 0
+        for entry in meal_data.meals:
+            for item in entry.items:
+                meals.append({"meal": item.model_dump()})
+                total_calories += item.calories
+
+        water_data = WaterService.get_user_water(user_uuid, date)
+        water_entries = water_data.water
+        total_water = sum(w.amount for w in water_entries)
+
+        return render_template("nutrition.html",
+            meals=meals,
+            water_entries=water_entries,
+            total_calories=int(total_calories),
+            total_water=total_water,
+            selected_date=selected_date,
+            today=today
+        )
+
     @app.route("/meals")
     def meals_page():
         user_uuid = session.get("user_uuid")
