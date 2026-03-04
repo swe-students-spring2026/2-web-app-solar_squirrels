@@ -22,14 +22,29 @@
 
       <div class="button-group">
         <a href="{{ url_for('add_meal_page') }}" class="btn">Add Meal</a>
-        <a href="{{ url_for('add_water_page') }}" class="btn btn-secondary">Add Water</a>
+        <a href="{{ url_for('add_water_page') }}" class="btn btn-secondary"
+          >Add Water</a
+        >
       </div>
 
       <div class="section">
-        <form class="search" method="GET" action="{{ url_for('nutrition_page') }}">
+        <form
+          class="search"
+          method="GET"
+          action="{{ url_for('nutrition_page') }}"
+        >
           <label for="date">Search by date</label>
-          <input id="date" type="date" name="date" value="{{ selected_date }}" />
-          <button class="btn" type="submit" style="width: 100%; margin-top: 10px; margin-bottom: 20px">
+          <input
+            id="date"
+            type="date"
+            name="date"
+            value="{{ selected_date }}"
+          />
+          <button
+            class="btn"
+            type="submit"
+            style="width: 100%; margin-top: 10px; margin-bottom: 20px"
+          >
             Search
           </button>
         </form>
@@ -40,34 +55,50 @@
       {% endif %}
 
       <h2>Meals</h2>
-      {% if meals and meals|length > 0 %}
-        {% for item in meals %}
-        <div class="meal-card">
-          <div class="meal-header">
-            <span class="meal-type">{{ item.meal.type }}</span>
+      {% if meals and meals|length > 0 %} {% for item in meals %}
+      <div class="meal-card">
+        <div class="meal-header">
+          <span class="meal-type">{{ item.meal.type }}</span>
+          <a
+            href="{{ url_for('add_meal_page', 
+           name=item.meal.type, 
+           calories=item.meal.calories, 
+           protein=item.meal.protein, 
+           carbs=item.meal.carbs, 
+           fat=item.meal.fat) }}"
+            class="btn-again"
+          >
+            Add Again
+          </a>
+        </div>
+        <div class="meal-macros">
+          <div class="stat-item">
+            <strong>{{ item.meal.calories }}</strong> kcal
           </div>
-          <div class="meal-macros">
-            <div class="stat-item"><strong>{{ item.meal.calories }}</strong> kcal</div>
-            <div class="stat-item"><strong>{{ item.meal.protein }}</strong> g Protein</div>
-            <div class="stat-item"><strong>{{ item.meal.carbs }}</strong> g Carbs</div>
-            <div class="stat-item"><strong>{{ item.meal.fat }}</strong> g Fat</div>
+          <div class="stat-item">
+            <strong>{{ item.meal.protein }}</strong> g Protein
+          </div>
+          <div class="stat-item">
+            <strong>{{ item.meal.carbs }}</strong> g Carbs
+          </div>
+          <div class="stat-item">
+            <strong>{{ item.meal.fat }}</strong> g Fat
           </div>
         </div>
-        {% endfor %}
-      {% else %}
-        <p class="status">No meals found.</p>
+      </div>
+      {% endfor %} {% else %}
+      <p class="status">No meals found.</p>
       {% endif %}
 
       <h2>Water</h2>
-      {% if water_entries and water_entries|length > 0 %}
-        {% for entry in water_entries %}
-        <div class="water-card">
-          <span class="water-amount">{{ entry.amount }} oz</span>
-          <span class="water-time">{{ entry.time.strftime('%I:%M %p') }}</span>
-        </div>
-        {% endfor %}
-      {% else %}
-        <p class="status">No water entries found.</p>
+      {% if water_entries and water_entries|length > 0 %} {% for entry in
+      water_entries %}
+      <div class="water-card">
+        <span class="water-amount">{{ entry.amount }} oz</span>
+        <span class="water-time">{{ entry.time.strftime('%I:%M %p') }}</span>
+      </div>
+      {% endfor %} {% else %}
+      <p class="status">No water entries found.</p>
       {% endif %}
     </div>
   </body>
