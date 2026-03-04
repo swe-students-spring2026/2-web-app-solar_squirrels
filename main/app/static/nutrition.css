@@ -1,0 +1,159 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  color: #111;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+  padding: 16px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.back {
+  text-decoration: none;
+  color: #111;
+  font-size: 14px;
+}
+
+h1 {
+  margin: 0 0 12px 0;
+  font-size: 22px;
+}
+
+h2 {
+  margin: 18px 0 8px 0;
+  font-size: 18px;
+}
+
+/* Stats banner */
+.stats-banner {
+  background: #eef2ff;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+.stats-banner p {
+  margin: 4px 0;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #2f6bff;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: #111;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* Search */
+.search {
+  margin: 12px 0;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+label {
+  font-size: 13px;
+  color: gray;
+}
+
+.status {
+  font-size: 13px;
+  color: gray;
+  margin: 8px 0;
+}
+
+/* Meal cards */
+.meal-card {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.meal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.meal-type {
+  font-size: 16px;
+  font-weight: bold;
+  color: #111;
+}
+
+.meal-macros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Water cards */
+.water-card {
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.water-amount {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.water-time {
+  color: #888;
+  font-size: 12px;
+}
