@@ -224,7 +224,6 @@ def create_app():
         try:
             date_str = request.form.get("date")
             amount = request.form.get("amount")
-
             date = datetime.fromisoformat(date_str)
             water_item = WaterItem(time=datetime.now(), amount=int(amount))
 
