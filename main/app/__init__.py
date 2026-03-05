@@ -177,7 +177,6 @@ def create_app():
 
         return redirect(url_for("workouts_page"))
         
-    #TODO: Daily maintenance calories
 
     '''------- MEAL API ROUTES -------'''
 
@@ -267,7 +266,9 @@ def create_app():
         water_data = WaterService.get_user_water(user_uuid, today)
         total_water = sum(w.amount for w in water_data.water)
 
-        return render_template("dashboard.html", workouts=workouts, weekly_count=weekly_count, recommendation=recommendation, total_calories=int(total_calories), total_water=total_water)
+        tdee = UserService.get_tdee_for_user(user_uuid)
+
+        return render_template("dashboard.html", workouts=workouts, weekly_count=weekly_count, recommendation=recommendation, total_calories=int(total_calories), total_water=total_water, tdee=tdee)
     
     @app.route("/workouts")
     def workouts_page():
@@ -367,7 +368,16 @@ def create_app():
         user_uuid = session.get("user_uuid")
         if not user_uuid:
             return redirect(url_for("login_page"))
-        return render_template("add_meal.html")
+
+        prefill = {
+            "date": datetime.now().strftime('%Y-%m-%d'),
+            "name": request.args.get("name", ""),
+            "calories": request.args.get("calories", ""),
+            "protein": request.args.get("protein", ""),
+            "carbs": request.args.get("carbs", ""),
+            "fat": request.args.get("fat", ""),
+        }
+        return render_template("add_meal.html", prefill=prefill)
 
     @app.route("/water/add")
     def add_water_page():

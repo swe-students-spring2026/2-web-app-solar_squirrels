@@ -157,3 +157,21 @@ label {
   color: #888;
   font-size: 12px;
 }
+
+.btn-again {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: #f0f4ff;
+  color: #2f6bff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: 1px solid #dce4ff;
+  transition: all 0.2s ease;
+}
+
+.btn-again:hover {
+  background-color: #2f6bff;
+  color: white;
+}
